@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "tsx watch ./src/server.ts",
     "build": "tsc",
-    "start": "node ./build/src/server.js"
+    "start": "node ./build/src/server.js",
+    "postinstall": "esbuild --version || npm rebuild esbuild"
   },
   "keywords": [],
   "author": "Allysson Ryan",
