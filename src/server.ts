@@ -5,22 +5,25 @@ import cors from 'cors';
 import { setupMongo } from './database';
 import { errorHandler } from './middleware/error.handler.middleware';
 
-setupMongo().then(() => {
-  const app = express();
+const app = express();
 
-  // Configuração do CORS
-  app.use(
-        cors({
-          origin: process.env.FRONT_URL,
-          methods: ['GET', 'POST'],
-          credentials: true,
-        }),
-      );
+const frontUrl = process.env.FRONT_URL?.replace(/\/$/, '');
 
-  app.use(json());
-  app.use(routes);
-  app.use(errorHandler);
+app.use(
+  cors({
+    origin: frontUrl,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  }),
+);
 
-  const port = process.env.PORT || 3334;
-  app.listen(port, () => console.log(`🚀 App is running on port ${port}!`));
+app.use(json());
+app.use(routes);
+app.use(errorHandler);
+
+// Conecta ao Mongo sem `listen()`
+setupMongo().catch((err) => {
+  console.error('Erro ao conectar com o MongoDB:', err);
 });
+
+export default app;
